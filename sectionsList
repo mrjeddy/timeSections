@@ -1,0 +1,37 @@
+<?php
+$inviter = array();		// состояния приглашающего
+$guest = array();		// состояния гостя
+
+$data = array();		// то что вернет 
+//$sections= 48;		// для всего времени
+$sections= 5;			// чтоб проще читать
+
+// как бы запрос из базы в массивы запихнули
+$timeCut = 0;
+while ($timeCut < $sections){
+	
+	array_push($inviter,1);
+	array_push($guest,1);
+	
+	$timeCut++;
+}
+
+$inviter[2] = 0;		// допустим он тут занят
+$guest[3] = 0;			// допустим он тут занят
+
+$date = new DateTime('2021-07-05T8:00:00');	
+$timeCut = 0;
+while($timeCut < $sections){
+	if ($inviter[$timeCut] == 1 && $guest[$timeCut] == 1){
+		$datestamp = Array ( "startTime" => $date->format(DateTime::ISO8601), "available" => true);
+	}else{
+    	$datestamp = Array ( "startTime" => $date->format(DateTime::ISO8601), "available" => false);
+    }
+    array_push($data, $datestamp);
+    
+    $date->add(new DateInterval('PT15M'));	
+	$timeCut++;
+}
+
+echo json_encode(['data' => $data]);
+?>
